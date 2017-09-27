@@ -1,0 +1,343 @@
+html {
+    font-size: 100%;
+}
+
+body {
+    width: 100%;
+    color: #FFFFFF;
+    background: url('../images/bg.png') center;
+    padding-bottom: 1rem;
+}
+
+* {
+    padding: 0;
+    color: #FFFFFF;
+    font-family: PingFangSC-Ultralight;
+}
+
+#system {
+    width: 100%;
+    height: 100%;
+    background: url('../images/bg.png') center no-repeat;
+}
+
+.nav_left {
+    margin-left: 2%;
+    margin-top: -20px;
+}
+
+.nav_left, .nav_right {
+    text-align: center;
+    display: inline-block;
+}
+
+.right-title span {
+    font-family: PingFangSC-Thin;
+}
+
+.left-title {
+    font-size: 1.4rem;
+    background: url(../images/line.png) center no-repeat;
+    background-size: 100% 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-bottom: 6.7%;
+}
+
+.text-left {
+    /* width: 40%; */
+    float: left;
+}
+
+.text-right {
+    /* width: 60%; */
+    float: right;
+}
+
+.order-new {
+    background: url('../images/order_new.png') center no-repeat;
+    background-size: 100% 100%;
+    height: 0;
+    width: 100%;
+    padding-bottom: 33.3%;
+}
+
+#order li {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.order_div {
+    padding: 6% 8% 4.7% 8%;
+    box-sizing: border-box;
+    margin-bottom: 8%;
+}
+
+.order_div div {
+    display: inline-block;
+    line-height: 1rem;
+    font-size: 1rem;
+}
+
+.createtime {
+    display: inline-block;
+    line-height: 1.2rem;
+    font-size: 1rem;
+    width: 27%;
+    text-align: right;
+}
+
+.amount {
+    width: 57%;
+    padding-bottom: 10%;
+    height: 0;
+    line-height: 1.4rem;
+    font-size: 1.2rem;
+    background: rgba(35, 29, 18, 0.61);
+    border-radius: 2rem;
+    display: inline-block;
+}
+
+.order-normal {
+    background: url('../images/order_normal.png') center no-repeat;
+    background-size: 100% 100%;
+    height: 0;
+    width: 100%;
+    padding-bottom: 33.3%;
+    margin-top: 5%;
+}
+
+.right-title {
+    width:100%;
+    text-align: center;
+    font-size: 1.75rem;
+    line-height: 1.8rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-top: 1%;
+}
+
+.right-title img {
+    height: 2.5625rem;
+    line-height: 2.5625rem;
+    vertical-align: middle;
+}
+
+#nowdate {
+    text-align: center;
+    width: 25%;
+    line-height: 2rem;
+    font-size: 1.05rem;
+    color: #D0E0FF;
+    background: rgba(120, 154, 253, 0.10);
+    border: 1px solid #3D5187;
+    letter-spacing: 2px;
+    margin: auto;
+    margin-top:10px;
+}
+
+.nodata {
+    text-align: center!important;
+    line-height: 8.4rem!important;
+    font-size: 1.6rem;
+    margin: 0!important;
+    padding: 0!important;
+}
+
+.box-item {
+    width: 30%;
+    float: left;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 3%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.box-item img {
+    width: 90%;
+    margin: auto;
+    margin-top: .625rem;
+}
+
+.box-item .title {
+    color: #AAE3FF;
+    font-size: 1.4rem;
+    line-height: 1.4rem;
+}
+
+.item-block {
+    width: 94%;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    background: url(../images/order_block.png?v=2) center no-repeat;
+    background-size: 100% 100%;
+    margin-top: 5%;
+    margin-left: auto;
+}
+
+.personal-block {
+    width: 94%;
+    padding-top: 6%;
+    padding-bottom: 6%;
+    background: url(../images/order_block.png?v=2) center no-repeat;
+    background-size: 100% 100%;
+    margin-top: 5%;
+    margin-left: auto;
+}
+
+.item-block ul {
+    width: 100%;
+    height: 8.4rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.group-name {
+    width: 8.75rem;
+}
+
+.name2 {
+    display: inline-block;
+    font-size: 1.05rem;
+    margin-left: 6%;
+}
+
+.amount2 {
+    font-family: Consolas;
+    font-weight: lighter;
+    display: inline-block;
+    background: #20498C;
+    border: 1px solid #2D5B96;
+    line-height: 1.8rem;
+    text-align: right;
+    font-size: 1.05rem;
+    padding-right: 3%;
+    letter-spacing: 1px;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.font_thin {
+    font-family: PingFangSC-Thin;
+}
+
+.amount3 {
+    width: 90%;
+    height: 1.6rem;
+    line-height: 1.6rem;
+    font-size: 1.05rem;
+    background: rgba(35, 29, 18, 0.61);
+    border-radius: .9375rem;
+    margin: auto;
+    margin-left: .625rem;
+}
+
+.head-div {
+    line-height: 2.5rem;
+    width: 40%;
+    text-align: left;
+    position: relative;
+}
+
+.info-div {
+    width: 60%;
+    line-height: 2rem;
+    box-sizing: border-box;
+}
+
+.head-div .ranking-img {
+    vertical-align: middle;
+    width: 28%;
+    margin-right: 8%;
+    margin-left: 15%;
+}
+
+.head-div .head-img {
+    vertical-align: middle;
+    width: 40%;
+    border: 1px solid #45719F;
+}
+
+.head-div .king-img {
+    width: 28%;
+    position: absolute;
+    left: 76%;
+    top: -20%;
+}
+
+.personal-block ul {
+    width: 100%;
+    height: 12rem;
+    vertical-align: middle;
+}
+
+.personal-block li {
+    clear: both;
+    height: 4rem;
+    padding-left: 3%;
+}
+
+.congratulation {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    text-align: center;
+    background: rgba(2, 2, 1, 0.8);
+    z-index: 100000;
+}
+
+#con_user, #con_org {
+    font-family: PingFangSC-Regular;
+    font-size: 1.875rem;
+    color: #FFFFFF;
+    line-height: 1.875rem;
+}
+
+.previous {
+    height: 2.6rem;
+    line-height: 2.6rem;
+    font-size: 1.05rem;
+    color: #D0E0FF;
+    text-align: right;
+    margin-right: 5%;
+}
+
+#con_num {
+    font-family: PingFangSC-Medium;
+    font-size: 3.375rem;
+    color: #FFFFFF;
+    margin-top: -1.875rem;
+}
+
+#con_num .num {
+    width: 4.375rem;
+    height: 5.625rem;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    background: #20498C;
+    border: .0625rem solid #2F7FA6;
+    margin-right: .625rem;
+}
+
+#con_num span {
+    display: inline-block;
+    line-height: 5.625rem;
+    text-align: center;
+    overflow: hidden;
+}
+
+#con_num b {
+    width: 2.0625rem;
+    height: 4.6875rem;
+    display: block;
+    text-align: center;
+}

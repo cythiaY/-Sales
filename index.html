@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow:hidden;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>辅导君销售额排行实时战报</title>
+    <link rel="stylesheet" type="text/css" href="static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="static/css/common.css?v=3">
+    <link rel="stylesheet" type="text/css" href="static/css/index.css?v=9">
+</head>
+
+<body>
+    <div id="system">
+        <div class="right-title"><img src="static/images/line_left.png" alt=""><span>辅导君销售额排行实时战报</span><img src="static/images/line_right.png" alt=""></div>
+        <div class="" id="nowdate"></div>
+        <div class="nav_left" style="width:20%;">
+            <div class="floatL" style="width:78%;padding-left: 10%;">
+                <div class="left-title">本月实时成单额</div>
+                <ul id="order" style="width:100%">
+                    <li class="order-new">
+                        <div class="order_div">
+                            <div class="text-left" id="newoederuser"></div>
+                            <div class="text-right" id="newoederorg"></div>
+                        </div>
+                        <div class="amount" id="newoederamount"></div>
+                        <div class="createtime" id="newoedertime"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav_right" style="width:77%;">
+            <div class="floatL" style="width:100%;">
+                <div id="items">
+                </div>
+                <div style="clear:both;"></div>
+                <div id="personals">
+                </div>
+                <div style="clear:both;"></div>
+                <div class="previous"></div>
+            </div>
+
+        </div>
+    </div>
+    <div class="congratulation" hidden>
+        <img src="static/images/congratulation.png" alt="开单">
+        <div style="position:relative;top:-60px;"><span id="con_user" style="margin-right: 50px;"></span><span id="con_org"></span></div>
+        <div id="con_num"></div>
+    </div>
+    <iframe src="" name="yyframe" id="yyframe" frameborder="0" hidden>
+        <video autoplay name="media"></video>
+    </iframe>
+    <script src="static/js/index.js?v=10"></script>
+    <script type="text/javascript" src="static/js/jquery-1.7.1.min.js"></script>
+    <script language="JavaScript">
+        var now;
+
+        // 间隔刷新页面数据跟新
+        function refresh() {
+            now = new Date();
+            var pervioustime = '';
+            pervioustime = checkTime(now.getHours()) + ":" + checkTime(now.getMinutes()) +
+                ":" + checkTime(now.getSeconds());
+            document.getElementsByClassName("previous")[0].innerHTML = "刷新时间 " + pervioustime;
+        }
+        // 日期格式调整
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+        refresh();
+        setInterval('refresh()', 30000); //指定30秒刷新一次
+    </script>
+
+</body>
+
+</html>
