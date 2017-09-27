@@ -2,7 +2,7 @@ window.onload = function () {
     var teamTitle = ["团队日排行榜", "团队周排行榜", "团队月排行榜"];
     var personTitle = ["个人日排行榜", "个人周排行榜", "个人月排行榜"];
     var nodata = ["今日暂无，继续加油！", "本周暂无，继续加油！", "本月暂无，继续加油！"]
-    var realdata, getdata, teamdata, persondata;
+    var realdata;
     var now, days, daycounts, str;
     var mac = "a4:5e:60:d7:a0";
     window.testToken = "";
@@ -11,26 +11,39 @@ window.onload = function () {
 
     function getMock() {
         this.mockData = Mock.mock({
-            'number1|500000-50000000': 1,
-            'number2|5000-50000': 1,
-            "arr1|3": [{
-                "name|1": [
-                    "飞鸟队",
-                    "新酒队",
-                    "吉草队",
-                    "花瓣队",
-                    "和平队"
+            'teamAccount|500000-50000000': 1,
+            'perAccount|5000-50000': 1,
+            'teamName|8': [{
+                'name|1': [
+                    '飞鸟队',
+                    '新酒队',
+                    '吉草队',
+                    '花瓣队',
+                    '和平队',
+                    '甘地队'
                 ]
             }],
-            "arr2|3": [{
-                "name|1": [
-                    "唐可可",
-                    "夏琳儿",
-                    "林晓晓",
-                    "贾聪聪",
-                    "汪一一"
+            'dateTime|8': [{
+                'hour|0-23': 1,
+                'minute|0-59': 1
+            }],
+            'personName|8': [{
+                'name|1': [
+                    '唐可可',
+                    '夏琳儿',
+                    '林晓晓',
+                    '贾聪聪',
+                    '汪一一',
+                    '徐笑笑',
+                    '谭花花'
                 ]
-            }]
+            }],
+            'orderStatus|1': [
+                0,
+                1,
+                0,
+                0
+            ]
         })
     }
 
@@ -55,33 +68,21 @@ window.onload = function () {
         }
     }
     // 排名XHR对象、新订单XHR对象、语音XHR对象
-    var xhr = createXHR();
     var newxhr = createXHR();
     var tokenxhr = createXHR();
-    var url = "https://crm.fudaojun.com/api/television/rank"; // 排名数据接口
     var newurl = "https://crm.fudaojun.com/api/television/real-time"; // 新订单接口
     var getTokenUrl = "http://crm.fudaojun.com/api/television/token"; // 获取语音token
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-                getdata = JSON.parse(xhr.responseText);
-                teamdata = [getdata.team_days_data, getdata.team_weeks_data, getdata.team_months_data];
-                persondata = [getdata.person_day_data, getdata.person_weeks_data, getdata.person_months_data];
-                getMock();
-                addTeamInfo(teamdata);
-                addPersonInfo(persondata);
-                addOrder(getdata.real_orders);
-            } else {
-                console.log("Request was unsuccessful: " + xhr.status);
-            }
-        }
-    };
-    xhr.open("get", url, true);
-    xhr.send(null);
-    // 定时刷新实时状况数据
+
+    getMock();
+    addTeamInfo();
+    addPersonInfo();
+    addOrder()
+    // 定时(30秒)刷新数据
     setInterval(function () {
-        xhr.open("get", url, true);
-        xhr.send(null);
+        getMock();
+        addTeamInfo();
+        addPersonInfo();
+        addOrder()
     }, 30000);
 
     newxhr.onreadystatechange = function () {
@@ -119,9 +120,9 @@ window.onload = function () {
 
     /**
      * 团队实时战况
-     * @param {object} data 
+     * 
      */
-    function addTeamInfo(data) {
+    function addTeamInfo() {
         var items = document.getElementById("items");
         var blocks = items.getElementsByClassName("box-item");
         // 每次刷新团队战况前，判断数据页面是否有数据然后删除原来数据
@@ -130,7 +131,7 @@ window.onload = function () {
             items.removeChild(blocks[1]);
             items.removeChild(blocks[0]);
         }
-        for (var n = 0; n < data.length; n++) {
+        for (var n = 0; n < 3; n++) {
             var item = document.createElement('div');
             item.className = "box-item";
             var itemtitle = document.createElement('div');
@@ -143,29 +144,19 @@ window.onload = function () {
             var itemblock = document.createElement('div');
             itemblock.className = "item-block";
             var itemul = document.createElement('ul');
-            // if (data[n].length < 0) {
-            //     itemul.appendChild(document.createTextNode(nodata[n]));
-            //     itemul.className = "nodata";
-            // } else {
-            // var ranklength = 0;
-            // if (data[n].length >= 3) {
-            //     ranklength = 3;
-            // } else {
-            //     ranklength = data[n].length;
-            // }
+
             for (var t = 0; t < 3; t++) {
                 var itemli = document.createElement('li');
                 var lispan1 = document.createElement('span');
                 var lispan2 = document.createElement('span');
                 lispan1.className = "name2 wid-44";
                 lispan2.className = "amount2 wid-" + (46 - t * 6) + " MLP-" + (t * 6);
-                lispan1.innerHTML = (t + 1) + " " + this.mockData.arr1[t].name;
-                lispan2.innerHTML = parseInt((this.mockData.number1) / (Math.pow(10, t))).toLocaleString('en-US');
+                lispan1.innerHTML = (t + 1) + " " + this.mockData.teamName[t].name;
+                lispan2.innerHTML = parseInt((this.mockData.teamAccount) / (Math.pow(10, t))).toLocaleString('en-US');
                 itemli.appendChild(lispan1);
                 itemli.appendChild(lispan2);
                 itemul.appendChild(itemli);
             }
-            // }
             itemblock.appendChild(itemul);
             item.appendChild(itemblock);
             items.appendChild(item);
@@ -173,9 +164,9 @@ window.onload = function () {
     }
     /**
      * 个人实时战况
-     * @param {object} data 
+     *  
      */
-    function addPersonInfo(data) {
+    function addPersonInfo() {
         var personals = document.getElementById("personals");
         // 每次刷新个人战况前，判断数据页面是否有数据然后删除原来数据
         var blocks = personals.getElementsByClassName("box-item");
@@ -184,7 +175,7 @@ window.onload = function () {
             personals.removeChild(blocks[1]);
             personals.removeChild(blocks[0]);
         }
-        for (var n = 0; n < data.length; n++) {
+        for (var n = 0; n < 3; n++) {
             var item = document.createElement('div');
             item.className = "box-item";
             var itemtitle = document.createElement('div');
@@ -197,57 +188,39 @@ window.onload = function () {
             var personblock = document.createElement('div');
             personblock.className = "personal-block";
             var itemul = document.createElement('ul');
-            if (data[n].length < 0) {
-                itemul.appendChild(document.createTextNode(nodata[n]));
-                itemul.className = "nodata";
-            } else {
-                // var ranklength = 0;
-                // if (data[n].length >= 3) {
-                //     ranklength = 3;
-                // } else {
-                //     ranklength = data[n].length;
-                // }
-                for (var m = 0; m < 3; m++) {
-                    var itemli = document.createElement('li');
-                    var lidiv = document.createElement('div');
-                    lidiv.className = "floatL head-div";
-                    var img1 = document.createElement('img');
-                    img1.className = "ranking-img";
-                    img1.src = "static/images/rank_" + (m + 1) + ".png";
-                    lidiv.appendChild(img1);
-                    var img2 = document.createElement('img');
-                    img2.className = "head-img";
-                    // if (data[n][m].avatar == '' || data[n][m].avatar == null) {
-                        img2.src = "static/images/head.jpg";
-                    // } else {
-                    //     img2.src = data[n][m].avatar;
-                    // }
-                    lidiv.appendChild(img2);
-                    var lidiv2 = document.createElement('div');
-                    lidiv2.className = "floatL info-div";
-                    var namespan = document.createElement('span');
-                    namespan.className = "floatL wid-100 text-center";
-                    namespan.innerHTML = this.mockData.arr2[m].name;
-                    var amountspan = document.createElement('span');
-                    if (m == 0) {
-                        amountspan.className = "floatL amount3 text-center";
-                    } else {
-                        amountspan.className = "floatL amount3 text-center";
-                    }
-                    amountspan.innerHTML = (this.mockData.number2 - 1000 * m).toLocaleString('en-US');
-                    lidiv2.appendChild(namespan);
-                    lidiv2.appendChild(amountspan);
-                    if (m == 0) {
-                        var img3 = document.createElement('img');
-                        img3.className = "king-img";
-                        img3.src = "static/images/king.png";
-                        lidiv.appendChild(img3);
-                        lidiv2.className = "floatL info-div king-info";
-                    }
-                    itemli.appendChild(lidiv);
-                    itemli.appendChild(lidiv2);
-                    itemul.appendChild(itemli);
+
+            for (var m = 0; m < 3; m++) {
+                var itemli = document.createElement('li');
+                var lidiv = document.createElement('div');
+                lidiv.className = "floatL head-div";
+                var img1 = document.createElement('img');
+                img1.className = "ranking-img";
+                img1.src = "static/images/rank_" + (m + 1) + ".png";
+                lidiv.appendChild(img1);
+                var img2 = document.createElement('img');
+                img2.className = "head-img";
+                img2.src = "static/images/head.jpg";
+                lidiv.appendChild(img2);
+                var lidiv2 = document.createElement('div');
+                lidiv2.className = "floatL info-div";
+                var namespan = document.createElement('span');
+                namespan.className = "floatL wid-100 text-center";
+                namespan.innerHTML = this.mockData.personName[m].name;
+                var amountspan = document.createElement('span');
+                amountspan.className = "floatL amount3 text-center";
+                amountspan.innerHTML = (this.mockData.perAccount - 1000 * m).toLocaleString('en-US');
+                lidiv2.appendChild(namespan);
+                lidiv2.appendChild(amountspan);
+                if (m == 0) {
+                    var img3 = document.createElement('img');
+                    img3.className = "king-img";
+                    img3.src = "static/images/king.png";
+                    lidiv.appendChild(img3);
+                    lidiv2.className = "floatL info-div king-info";
                 }
+                itemli.appendChild(lidiv);
+                itemli.appendChild(lidiv2);
+                itemul.appendChild(itemli);
             }
             personblock.appendChild(itemul);
             item.appendChild(personblock);
@@ -267,17 +240,17 @@ window.onload = function () {
 
     /**
      * 订单列表
-     * @param {object} data 
+     *  
      */
-    function addOrder(data) {
+    function addOrder() {
         var newuser = document.getElementById("newoederuser");
         var neworg = document.getElementById("newoederorg");
         var newamount = document.getElementById("newoederamount");
         var newoedertime = document.getElementById("newoedertime");
-        newuser.innerHTML = data[0].user;
-        neworg.innerHTML = data[0].org;
-        newamount.innerHTML = parseInt(data[0].total).toLocaleString('en-US');
-        newoedertime.innerHTML = data[0].create_time.substr(11);
+        newuser.innerHTML = this.mockData.personName[0].name;
+        neworg.innerHTML = this.mockData.teamName[0].name;
+        newamount.innerHTML = this.mockData.perAccount.toLocaleString('en-US');
+        newoedertime.innerHTML = this.mockData.dateTime[0].hour + ":" + this.mockData.dateTime[0].minute;
         var orderUl = document.getElementById("order");
         // 每次刷新开单战况前，判断数据页面是否有数据然后删除原来数据
         var blocks = orderUl.getElementsByClassName("order-normal");
@@ -286,7 +259,7 @@ window.onload = function () {
                 orderUl.removeChild(blocks[i]);
             }
         }
-        for (var k = 1; k < data.length; k++) {
+        for (var k = 1; k < 8; k++) {
             var orderLi = document.createElement('li');
             orderLi.className = "order-normal";
             var firstdiv = document.createElement('div');
@@ -295,16 +268,16 @@ window.onload = function () {
             var spansecond = document.createElement('div');
             spanfirst.className = "text-left";
             spansecond.className = "text-right";
-            spanfirst.appendChild(document.createTextNode(data[k].user));
-            spansecond.innerHTML = data[k].org;
+            spanfirst.appendChild(document.createTextNode(this.mockData.personName[k].name));
+            spansecond.innerHTML = this.mockData.teamName[k].name;
             firstdiv.appendChild(spanfirst);
             firstdiv.appendChild(spansecond);
             var seconddiv = document.createElement('div');
             var timediv = document.createElement('div');
             seconddiv.className = "amount";
-            seconddiv.innerHTML = parseInt(data[k].total).toLocaleString('en-US');
+            seconddiv.innerHTML = (this.mockData.perAccount + 1000 * k).toLocaleString('en-US');
             timediv.className = "createtime";
-            timediv.innerHTML = data[k].create_time.substr(11);
+            timediv.innerHTML = this.mockData.dateTime[k].hour + ":" + this.mockData.dateTime[k].minute;
             orderLi.appendChild(firstdiv);
             orderLi.appendChild(seconddiv);
             orderLi.appendChild(timediv);
@@ -414,7 +387,6 @@ window.onload = function () {
             } else {
                 str += "个人今日暂无订单";
             }
-            str += ",大家加油！"
             broadcast(str, mac, window.testToken);
         }
     }
@@ -440,7 +412,6 @@ window.onload = function () {
             } else {
                 str += "个人本周暂无订单";
             }
-            str += ",大家加油！"
             // 每月最后五天月播报
             if (now.getDate() > (daycounts - 5) && now.getDate() <= daycounts) {
                 monthbroadcast();
@@ -468,7 +439,6 @@ window.onload = function () {
         } else {
             str += "个人本月暂无订单";
         }
-        str += ",大家加油！"
     }
     setInterval(function () {
         nowdate();
