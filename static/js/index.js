@@ -6,6 +6,33 @@ window.onload = function () {
     var now, days, daycounts, str;
     var mac = "a4:5e:60:d7:a0";
     window.testToken = "";
+    // 使用 Mock
+    var mockData;
+
+    function getMock() {
+        this.mockData = Mock.mock({
+            'number1|500000-50000000': 1,
+            'number2|5000-50000': 1,
+            "arr1|3": [{
+                "name|1": [
+                    "飞鸟队",
+                    "新酒队",
+                    "吉草队",
+                    "花瓣队",
+                    "和平队"
+                ]
+            }],
+            "arr2|3": [{
+                "name|1": [
+                    "唐可可",
+                    "夏琳儿",
+                    "林晓晓",
+                    "贾聪聪",
+                    "汪一一"
+                ]
+            }]
+        })
+    }
 
     function createXHR() {
         if (typeof XMLHttpRequest != "undefined") {
@@ -31,8 +58,8 @@ window.onload = function () {
     var xhr = createXHR();
     var newxhr = createXHR();
     var tokenxhr = createXHR();
-    var url = ""; // 排名数据接口
-    var newurl = ""; // 新订单接口
+    var url = "https://crm.fudaojun.com/api/television/rank"; // 排名数据接口
+    var newurl = "https://crm.fudaojun.com/api/television/real-time"; // 新订单接口
     var getTokenUrl = "http://crm.fudaojun.com/api/television/token"; // 获取语音token
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
@@ -40,6 +67,7 @@ window.onload = function () {
                 getdata = JSON.parse(xhr.responseText);
                 teamdata = [getdata.team_days_data, getdata.team_weeks_data, getdata.team_months_data];
                 persondata = [getdata.person_day_data, getdata.person_weeks_data, getdata.person_months_data];
+                getMock();
                 addTeamInfo(teamdata);
                 addPersonInfo(persondata);
                 addOrder(getdata.real_orders);
@@ -115,29 +143,29 @@ window.onload = function () {
             var itemblock = document.createElement('div');
             itemblock.className = "item-block";
             var itemul = document.createElement('ul');
-            if (data[n].length == 0) {
-                itemul.appendChild(document.createTextNode(nodata[n]));
-                itemul.className = "nodata";
-            } else {
-                var ranklength = 0;
-                if (data[n].length >= 3) {
-                    ranklength = 3;
-                } else {
-                    ranklength = data[n].length;
-                }
-                for (var t = 0; t < ranklength; t++) {
-                    var itemli = document.createElement('li');
-                    var lispan1 = document.createElement('span');
-                    var lispan2 = document.createElement('span');
-                    lispan1.className = "name2 wid-44";
-                    lispan2.className = "amount2 wid-" + (46 - t * 6) + " MLP-" + (t * 6);
-                    lispan1.innerHTML = (t + 1) + " " + data[n][t].org;
-                    lispan2.innerHTML = parseInt(data[n][t].total).toLocaleString('en-US');
-                    itemli.appendChild(lispan1);
-                    itemli.appendChild(lispan2);
-                    itemul.appendChild(itemli);
-                }
+            // if (data[n].length < 0) {
+            //     itemul.appendChild(document.createTextNode(nodata[n]));
+            //     itemul.className = "nodata";
+            // } else {
+            // var ranklength = 0;
+            // if (data[n].length >= 3) {
+            //     ranklength = 3;
+            // } else {
+            //     ranklength = data[n].length;
+            // }
+            for (var t = 0; t < 3; t++) {
+                var itemli = document.createElement('li');
+                var lispan1 = document.createElement('span');
+                var lispan2 = document.createElement('span');
+                lispan1.className = "name2 wid-44";
+                lispan2.className = "amount2 wid-" + (46 - t * 6) + " MLP-" + (t * 6);
+                lispan1.innerHTML = (t + 1) + " " + this.mockData.arr1[t].name;
+                lispan2.innerHTML = parseInt((this.mockData.number1) / (Math.pow(10, t))).toLocaleString('en-US');
+                itemli.appendChild(lispan1);
+                itemli.appendChild(lispan2);
+                itemul.appendChild(itemli);
             }
+            // }
             itemblock.appendChild(itemul);
             item.appendChild(itemblock);
             items.appendChild(item);
@@ -169,17 +197,17 @@ window.onload = function () {
             var personblock = document.createElement('div');
             personblock.className = "personal-block";
             var itemul = document.createElement('ul');
-            if (data[n].length == 0) {
+            if (data[n].length < 0) {
                 itemul.appendChild(document.createTextNode(nodata[n]));
                 itemul.className = "nodata";
             } else {
-                var ranklength = 0;
-                if (data[n].length >= 3) {
-                    ranklength = 3;
-                } else {
-                    ranklength = data[n].length;
-                }
-                for (var m = 0; m < ranklength; m++) {
+                // var ranklength = 0;
+                // if (data[n].length >= 3) {
+                //     ranklength = 3;
+                // } else {
+                //     ranklength = data[n].length;
+                // }
+                for (var m = 0; m < 3; m++) {
                     var itemli = document.createElement('li');
                     var lidiv = document.createElement('div');
                     lidiv.className = "floatL head-div";
@@ -189,24 +217,24 @@ window.onload = function () {
                     lidiv.appendChild(img1);
                     var img2 = document.createElement('img');
                     img2.className = "head-img";
-                    if (data[n][m].avatar == '' || data[n][m].avatar == null) {
-                        img2.src = "static/images/head.png?v=2";
-                    } else {
-                        img2.src = data[n][m].avatar;
-                    }
+                    // if (data[n][m].avatar == '' || data[n][m].avatar == null) {
+                        img2.src = "static/images/head.jpg";
+                    // } else {
+                    //     img2.src = data[n][m].avatar;
+                    // }
                     lidiv.appendChild(img2);
                     var lidiv2 = document.createElement('div');
                     lidiv2.className = "floatL info-div";
                     var namespan = document.createElement('span');
                     namespan.className = "floatL wid-100 text-center";
-                    namespan.innerHTML = data[n][m].user;
+                    namespan.innerHTML = this.mockData.arr2[m].name;
                     var amountspan = document.createElement('span');
                     if (m == 0) {
                         amountspan.className = "floatL amount3 text-center";
                     } else {
                         amountspan.className = "floatL amount3 text-center";
                     }
-                    amountspan.innerHTML = parseInt(data[n][m].total).toLocaleString('en-US');
+                    amountspan.innerHTML = (this.mockData.number2 - 1000 * m).toLocaleString('en-US');
                     lidiv2.appendChild(namespan);
                     lidiv2.appendChild(amountspan);
                     if (m == 0) {
