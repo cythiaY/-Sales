@@ -7,12 +7,12 @@ window.onload = function () {
     var mac = "a4:5e:60:d7:a0";
     window.testToken = "";
     // 使用 Mock
-    var mockData;
-
+    var mockData, newData;
+    // 生成随机数据
     function getMock() {
         this.mockData = Mock.mock({
             'teamAccount|500000-50000000': 1,
-            'perAccount|5000-50000': 1,
+            'perAccount|5000-10000': 1,
             'teamName|8': [{
                 'name|1': [
                     '飞鸟队',
@@ -37,16 +37,22 @@ window.onload = function () {
                     '徐笑笑',
                     '谭花花'
                 ]
-            }],
+            }]
+        })
+    }
+    // 生成随机数 决定是否为新订单
+    function getOrder() {
+        this.newData = Mock.mock({
             'orderStatus|1': [
                 0,
                 1,
                 0,
                 0
-            ]
+            ],
+            'orderIndex|0-7': 1
         })
     }
-
+    // 创建兼容性的XHR对象
     function createXHR() {
         if (typeof XMLHttpRequest != "undefined") {
             return new XMLHttpRequest();
@@ -67,44 +73,10 @@ window.onload = function () {
             throw new Error("No XHR object available.");
         }
     }
-    // 排名XHR对象、新订单XHR对象、语音XHR对象
-    var newxhr = createXHR();
+    // 语音XHR对象
     var tokenxhr = createXHR();
-    var newurl = "https://crm.fudaojun.com/api/television/real-time"; // 新订单接口
     var getTokenUrl = "http://crm.fudaojun.com/api/television/token"; // 获取语音token
-
-    getMock();
-    addTeamInfo();
-    addPersonInfo();
-    addOrder()
-    // 定时(30秒)刷新数据
-    setInterval(function () {
-        getMock();
-        addTeamInfo();
-        addPersonInfo();
-        addOrder()
-    }, 30000);
-
-    newxhr.onreadystatechange = function () {
-        if (newxhr.readyState == 4) {
-            if ((newxhr.status >= 200 && newxhr.status < 300) || newxhr.status == 304) {
-                realdata = JSON.parse(newxhr.responseText);
-                newOrder(realdata);
-            } else {
-                console.log("Request was unsuccessful: " + newxhr.status);
-            }
-        }
-    };
-    newxhr.open("get", newurl, true);
-    newxhr.setRequestHeader("platform", "whiteboard-pc");
-    newxhr.send(null);
-    // 定时刷新祝贺开单
-    setInterval(function () {
-        newxhr.open("get", newurl, true);
-        newxhr.setRequestHeader("platform", "whiteboard-pc");
-        newxhr.send(null);
-    }, 10000);
-
+    
     // 获取语音token
     tokenxhr.onreadystatechange = function () {
         if (tokenxhr.readyState == 4) {
@@ -117,6 +89,26 @@ window.onload = function () {
     };
     tokenxhr.open("HEAD", getTokenUrl, true);
     tokenxhr.send();
+
+    
+    getMock();
+    addTeamInfo();
+    addPersonInfo();
+    addOrder()
+    // 定时(30秒)刷新数据
+    setInterval(function () {
+        getMock();
+        addTeamInfo();
+        addPersonInfo();
+        addOrder()
+    }, 30000);
+
+    // 定时刷新祝贺开单
+    setInterval(function () {
+        getOrder();
+        console.log(this.newData.orderStatus + "----" + this.newData.orderIndex);
+        newOrder();
+    }, 10000);
 
     /**
      * 团队实时战况
@@ -229,12 +221,12 @@ window.onload = function () {
     }
     /**
      * 最新订单
-     * @param {object} data 
+     *  
      */
-    function newOrder(data) {
-        if (JSON.stringify(data) !== "{}") {
-            // 有新订单生成、调用congratulation函数
-            congratulation(data);
+    function newOrder() {
+        if (this.newData.orderStatus === 1) {
+            // 有新订单生成,调用congratulation函数
+            congratulation();
         }
     }
 
@@ -286,17 +278,17 @@ window.onload = function () {
     }
     /**
      * 提示祝贺开单
-     * @param {object} data 
+     *  
      */
-    function congratulation(data) {
+    function congratulation() {
         var con = document.getElementsByClassName("congratulation")[0];
         con.style.display = "block";
         var div = document.getElementById("con_num");
         var userspan = document.getElementById("con_user");
         var orgspan = document.getElementById("con_org");
-        var amount = data.total_price;
-        userspan.innerHTML = data.user;
-        orgspan.innerHTML = data.user_org;
+        var amount = this.mockData.perAccount;
+        userspan.innerHTML = this.mockData.personName[this.newData.orderIndex].name;
+        orgspan.innerHTML = this.mockData.teamName[this.newData.orderIndex].name;
         var html = '';
         var arr = String(amount).split('');
         for (var i = 0; i < arr.length; i++) {
@@ -315,7 +307,7 @@ window.onload = function () {
             num[j].querySelector("span").style.webkitTransition = 'all ' + (.9 + j * .1) + 's ease-in .1s'
             num[j].querySelector("span").style.webkitTransform = 'translate3d(0,-' + spanHeight + 'px,0)'
         }
-        var str = "祝贺" + data.user + "开单,金额" + data.total_price + "元,加油!";
+        var str = "祝贺" + this.mockData.personName[this.newData.orderIndex].name + "开单,金额" + this.mockData.perAccount + "元,加油!";
         broadcast(str, mac, window.testToken);
         // 定时6秒关闭祝贺页面
         setTimeout(function () {
@@ -341,7 +333,6 @@ window.onload = function () {
     function broadcast(str, mac, token) {
         tokenxhr.open("HEAD", getTokenUrl, true);
         tokenxhr.send();
-        console.log(window.testToken);
         var url = "http://tsn.baidu.com/text2audio?lan=zh&ctp=1&tex=" + str + "&cuid=" + mac + "&tok=" + token;
         window.open(url, "yyframe");
     }
